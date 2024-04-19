@@ -5,25 +5,10 @@ function DBConfig(){
     this.database   = process.env.DB_DATABASE;
     this.user       = process.env.DB_USER;
     this.password   = process.env.DB_PASSWORD;
-    this.port       = process.env.DB_PORT;
+    this.port       = parseInt(process.env.DB_PORT, 10);
     this.options    = {
-        trustServerCertificate: process.env.DB_TRUST_SERVER_CERTIFICATE
+        trustServerCertificate: process.env.DB_TRUST_SERVER_CERTIFICATE === 'true'
     };
 }
 
 module.exports = DBConfig;
-/*
-
-module.exports = {
-    server: process.env.DB_SERVER,
-    database: process.env.DB_NAME,
-    user:process.env.DB_USER,
-    password:process.env.DB_PASSWORD,
-    port: process.env.PORT,
-    options: {
-        trustServerCertificate:true
-    }   
-
-};
-
-*/

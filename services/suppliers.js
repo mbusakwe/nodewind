@@ -1,30 +1,42 @@
 const sql = require('mssql');
+const DBConfig = require('../db/dbconfig');
+
+const config = new DBConfig();
 
 
 async function getSuppliers(){
     try{
-        const request = sql.Request();
+        await sql.connect(config);
+        const request = new sql.Request();
         const result = await request.query('SELECT * FROM Suppliers');
         return result.recordset;
     }
     catch(err){
         throw err;
     }
+    finally{
+        sql.close();
+    }
 }
 
 async function getSupplierById(supplierId){
     try{
-        const request = sql.Request();
+        await sql.connect(config);
+        const request = new sql.Request();
         const result = await request.query(`SELECT * FROM Suppliers WHERE SupplierID = ${supplierId}; `);
         return result.recordset;
     }catch(err){
         throw err;
     }
+    finally{
+        sql.close();
+    }
 }
 
 async function createSupplier(supplierData){
     try{
-        const request = sql.Request();
+        await sql.connect(config);
+        const request = new sql.Request();
         let queryStatement = 
         `
             INSERT INTO [Suppliers]
@@ -58,11 +70,15 @@ async function createSupplier(supplierData){
     catch(err){
         throw err;
     }
+    finally{
+        sql.close();
+    }
 }
 
 async function updateSupplier(supplierData){
     try{
-        const request = sql.Request();
+        await sql.connect(config);
+        const request = new sql.Request();
 
         let queryStatement = 
         `
@@ -85,15 +101,22 @@ async function updateSupplier(supplierData){
     catch(err){
         throw err;
     }
+    finally{
+        sql.close();
+    }
 }
 
 async function deleteSupplier(supplierId){
     try{
-        const request = sql.Request();
+        await sql.connect(config);
+        const request = new sql.Request();
         await request.query(`DELETE FROM Suppliers WHERE [SupplierID] = ${supplierId}`);
     }
     catch(err){
         throw err;
+    }
+    finally{
+        sql.close();
     }
 }
 

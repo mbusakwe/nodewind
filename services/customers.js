@@ -1,8 +1,12 @@
 const sql = require('mssql');
+const DBConfig = require('../db/dbconfig');
+
+const config = new DBConfig();
 
 // Get all customers
 async function getCustomers(){
     try{
+        await sql.connect(config);
         const request = new sql.Request();
         const result = await request.query('SELECT * FROM Customers');
         return result.recordset;
@@ -10,11 +14,15 @@ async function getCustomers(){
     catch(err){
         throw err;  // Let the API route handle this error
     }
+    finally{
+        sql.close();
+    }
 }
 
 // Get a single customer
 async function getCustomerById(customerId){
     try{
+        await sql.connect(config);
         const request = new sql.Request();
         const result = await request.query(`SELECT * FROM Customers WHERE CustomerID = '${customerId}';`);
         return result.recordset;
@@ -22,11 +30,15 @@ async function getCustomerById(customerId){
     catch(err){
         throw err;
     }
+    finally{
+        sql.close();
+    }
 
 }
 
 async function createCustomer(customerData){
     try{
+        await sql.connect(config);
         let query = 
         `
             INSERT INTO [Customers] 
@@ -54,16 +66,20 @@ async function createCustomer(customerData){
                 ${customerData.Phone},
                 ${customerData.Fax});
         `;
-        const request = sql.Request();
+        const request = new sql.Request();
         await request.query(query);
     }
     catch(err){
         throw err;
     }
+    finally{
+        sql.close();
+    }
 }
 
 async function updateCustomer(customerData){
     try{
+        await sql.connect(config);
         let query = 
         `
             UPDATE [Customers]
@@ -80,23 +96,30 @@ async function updateCustomer(customerData){
                 ,[Fax] = '${customerData.Fax}'
             WHERE [CustomerID] = '${customerData.CustomerID}'
         `;
-        const request = sql.Request();
+        const request = new sql.Request();
         await request.query(query);
     }
     catch(err){
         throw err;
+    }
+    finally{
+        sql.close();
     }
 }
 
 
 async function deleteCustomer(customerId){
     try{
-        const request = sql.Request();
+        await sql.connect(config);
+        const request = new sql.Request();
         let query = `DELETE FROM Customers WHERE CustomerID = '${customerId}'`;
         await request.query(query);
     }
     catch(err){
         throw err;
+    }
+    finally{
+        sql.close();
     }
 }
 
