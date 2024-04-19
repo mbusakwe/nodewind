@@ -1,0 +1,11 @@
+# Temporary/build files
+*.log
+node_modules/
+build/
+
+
+# Operationg system files
+.DS_Store
+
+# API Keys and secrets
+.env
